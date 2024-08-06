@@ -29,10 +29,12 @@ let score = 0;
 let gameOver = false;
 
 function drawBackground() {
+    console.log('Drawing background');
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 }
 
 function drawKasper() {
+    console.log('Drawing Kasper');
     ctx.drawImage(kasper, kasperX, kasperY);
 }
 
@@ -46,6 +48,7 @@ function updateKasper() {
 }
 
 function drawPipes() {
+    console.log('Drawing pipes');
     pipes.forEach(pipe => {
         ctx.fillStyle = '#000';
         ctx.fillRect(pipe.x, pipe.topY, pipeWidth, pipe.topHeight);
