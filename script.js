@@ -146,8 +146,20 @@ Promise.all([
     new Promise((resolve, reject) => {
         kasper.onload = resolve;
         kasper.onerror = reject;
+    }),
+    new Promise((resolve, reject) => {
+        flapSound.oncanplaythrough = resolve;
+        flapSound.onerror = reject;
+    }),
+    new Promise((resolve, reject) => {
+        gameOverSound.oncanplaythrough = resolve;
+        gameOverSound.onerror = reject;
+    }),
+    new Promise((resolve, reject) => {
+        bgMusic.oncanplaythrough = resolve;
+        bgMusic.onerror = reject;
     })
 ]).then(() => {
     bgMusic.play();
     gameLoop();
-}).catch(err => console.error('Failed to load images:', err));
+}).catch(err => console.error('Failed to load assets:', err));
