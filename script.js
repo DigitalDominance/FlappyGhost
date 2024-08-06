@@ -3,16 +3,11 @@ const ctx = canvas.getContext('2d');
 canvas.width = 320;
 canvas.height = 480;
 
-let kasper = new Image();
-kasper.src = 'assets/kasperghostflappy.png';
-
 let background = new Image();
 background.src = 'assets/background.png';
 
-let flapSound = new Audio('assets/flap.wav');
-let gameOverSound = new Audio('assets/gameover.wav');
-let bgMusic = new Audio('assets/background.mp3');
-bgMusic.loop = true;
+let kasper = new Image();
+kasper.src = 'assets/kasperghostflappy.png';
 
 let kasperX = 50;
 let kasperY = 150;
@@ -29,12 +24,10 @@ let score = 0;
 let gameOver = false;
 
 function drawBackground() {
-    console.log('Drawing background');
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 }
 
 function drawKasper() {
-    console.log('Drawing Kasper');
     ctx.drawImage(kasper, kasperX, kasperY);
 }
 
@@ -48,7 +41,6 @@ function updateKasper() {
 }
 
 function drawPipes() {
-    console.log('Drawing pipes');
     pipes.forEach(pipe => {
         ctx.fillStyle = '#000';
         ctx.fillRect(pipe.x, pipe.topY, pipeWidth, pipe.topHeight);
@@ -59,7 +51,6 @@ function drawPipes() {
 function updatePipes() {
     pipes.forEach(pipe => {
         pipe.x -= pipeSpeed;
-
         if (pipe.x + pipeWidth < 0) {
             pipes.shift();
             score++;
@@ -90,8 +81,6 @@ function updatePipes() {
 
 function endGame() {
     gameOver = true;
-    gameOverSound.play();
-    bgMusic.pause();
     document.getElementById('gameOver').classList.remove('hidden');
 }
 
@@ -101,7 +90,6 @@ function restartGame() {
     pipes = [];
     score = 0;
     gameOver = false;
-    bgMusic.play();
     document.getElementById('gameOver').classList.add('hidden');
     document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
     gameLoop();
@@ -124,20 +112,16 @@ document.addEventListener('click', flap);
 function flap() {
     if (!gameOver) {
         velocity = lift;
-        flapSound.play();
     }
 }
 
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     drawBackground();
     drawKasper();
     updateKasper();
-
-    drawPipes();
     updatePipes();
-
+    drawPipes();
     drawScore();
 
     if (!gameOver) {
@@ -145,29 +129,15 @@ function gameLoop() {
     }
 }
 
-// Ensure all assets are loaded before starting the game
-window.addEventListener('load', () => {
-    Promise.all([
-        kasper.decode().catch((err) => console.error('Failed to load Kasper image:', err)),
-        background.decode().catch((err) => console.error('Failed to load background image:', err)),
-        new Promise((resolve, reject) => {
-            flapSound.addEventListener('canplaythrough', resolve, { once: true });
-            flapSound.addEventListener('error', (err) => reject('Failed to load flap sound:', err));
-        }),
-        new Promise((resolve, reject) => {
-            gameOverSound.addEventListener('canplaythrough', resolve, { once: true });
-            gameOverSound.addEventListener('error', (err) => reject('Failed to load game over sound:', err));
-        }),
-        new Promise((resolve, reject) => {
-            bgMusic.addEventListener('canplaythrough', resolve, { once: true });
-            bgMusic.addEventListener('error', (err) => reject('Failed to load background music:', err));
-        })
-    ]).then(() => {
-        document.body.addEventListener('click', () => {
-            if (!gameOver) {
-                bgMusic.play();
-                gameLoop();
-            }
-        }, { once: true });
-    }).catch(err => console.error('Failed to load assets:', err));
-});
+Promise.all([
+    new Promise((resolve, reject) => {
+        background.onload = resolve;
+        background.onerror = reject;
+    }),
+    new Promise((resolve, reject) => {
+        kasper.onload = resolve;
+        kasper.onerror = reject;
+    })
+]).then(() => {
+    gameLoop();
+}).catch(err => console.error('Failed to load images:', err));
