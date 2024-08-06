@@ -16,8 +16,8 @@ bgMusic.loop = true;
 
 let kasperX = 50;
 let kasperY = 150;
-let gravity = 0.6;
-let lift = -15;
+let gravity = 0.3;
+let lift = -6;
 let velocity = 0;
 
 let pipes = [];
