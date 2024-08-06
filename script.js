@@ -9,6 +9,11 @@ background.src = 'assets/background.png';
 let kasper = new Image();
 kasper.src = 'assets/kasperghostflappy.png';
 
+let flapSound = new Audio('assets/flap.wav');
+let gameOverSound = new Audio('assets/gameover.wav');
+let bgMusic = new Audio('assets/background.mp3');
+bgMusic.loop = true;
+
 let kasperX = 50;
 let kasperY = 150;
 let gravity = 0.6;
@@ -81,6 +86,8 @@ function updatePipes() {
 
 function endGame() {
     gameOver = true;
+    gameOverSound.play();
+    bgMusic.pause();
     document.getElementById('gameOver').classList.remove('hidden');
 }
 
@@ -90,6 +97,7 @@ function restartGame() {
     pipes = [];
     score = 0;
     gameOver = false;
+    bgMusic.play();
     document.getElementById('gameOver').classList.add('hidden');
     document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
     gameLoop();
@@ -112,6 +120,7 @@ document.addEventListener('click', flap);
 function flap() {
     if (!gameOver) {
         velocity = lift;
+        flapSound.play();
     }
 }
 
@@ -139,5 +148,6 @@ Promise.all([
         kasper.onerror = reject;
     })
 ]).then(() => {
+    bgMusic.play();
     gameLoop();
 }).catch(err => console.error('Failed to load images:', err));
