@@ -145,16 +145,19 @@ function gameLoop() {
 // Ensure all assets are loaded before starting the game
 window.addEventListener('load', () => {
     Promise.all([
-        kasper.decode(),
-        background.decode(),
-        new Promise(resolve => {
+        kasper.decode().catch((err) => console.error('Failed to load Kasper image:', err)),
+        background.decode().catch((err) => console.error('Failed to load background image:', err)),
+        new Promise((resolve, reject) => {
             flapSound.addEventListener('canplaythrough', resolve, { once: true });
+            flapSound.addEventListener('error', (err) => reject('Failed to load flap sound:', err));
         }),
-        new Promise(resolve => {
+        new Promise((resolve, reject) => {
             gameOverSound.addEventListener('canplaythrough', resolve, { once: true });
+            gameOverSound.addEventListener('error', (err) => reject('Failed to load game over sound:', err));
         }),
-        new Promise(resolve => {
+        new Promise((resolve, reject) => {
             bgMusic.addEventListener('canplaythrough', resolve, { once: true });
+            bgMusic.addEventListener('error', (err) => reject('Failed to load background music:', err));
         })
     ]).then(() => {
         document.body.addEventListener('click', () => {
