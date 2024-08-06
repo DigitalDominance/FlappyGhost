@@ -13,11 +13,10 @@ let flapSound = new Audio('assets/flap.wav');
 let gameOverSound = new Audio('assets/gameover.wav');
 let bgMusic = new Audio('assets/background.mp3');
 bgMusic.loop = true;
-bgMusic.play();
 
 let kasperX = 50;
 let kasperY = 150;
-let gravity = 1.5;
+let gravity = 0.6;
 let lift = -15;
 let velocity = 0;
 
@@ -107,7 +106,7 @@ function restartGame() {
 
 function drawScore() {
     ctx.fillStyle = '#fff';
-    ctx.font = '20px Arial';
+    ctx.font = '20px "Press Start 2P", cursive';
     ctx.fillText(`Score: ${score}`, 10, 25);
 }
 
@@ -143,4 +142,26 @@ function gameLoop() {
     }
 }
 
-gameLoop();
+// Ensure all assets are loaded before starting the game
+window.addEventListener('load', () => {
+    Promise.all([
+        kasper.decode(),
+        background.decode(),
+        new Promise(resolve => {
+            flapSound.addEventListener('canplaythrough', resolve, { once: true });
+        }),
+        new Promise(resolve => {
+            gameOverSound.addEventListener('canplaythrough', resolve, { once: true });
+        }),
+        new Promise(resolve => {
+            bgMusic.addEventListener('canplaythrough', resolve, { once: true });
+        })
+    ]).then(() => {
+        document.body.addEventListener('click', () => {
+            if (!gameOver) {
+                bgMusic.play();
+                gameLoop();
+            }
+        }, { once: true });
+    }).catch(err => console.error('Failed to load assets:', err));
+});
