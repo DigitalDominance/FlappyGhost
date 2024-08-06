@@ -54,6 +54,7 @@ function updatePipes() {
         if (pipe.x + pipeWidth < 0) {
             pipes.shift();
             score++;
+            document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
         }
 
         if (
@@ -93,6 +94,8 @@ function restartGame() {
     gameOver = false;
     bgMusic.play();
     document.getElementById('gameOver').classList.add('hidden');
+    document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
+    gameLoop();
 }
 
 function drawScore() {

@@ -4,17 +4,24 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: #70c5ce;
-    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #70c5ce, #4682b4);
+    font-family: 'Press Start 2P', cursive;
+    overflow: hidden;
 }
 
 #gameContainer {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 #gameCanvas {
     background: #70c5ce;
     display: block;
+    border: 2px solid #fff;
+    border-radius: 10px;
 }
 
 #gameOver {
@@ -29,6 +36,34 @@ body {
     border-radius: 10px;
 }
 
+#gameOver h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+#gameOver button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #ff6347;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#gameOver button:hover {
+    background-color: #ff4500;
+}
+
 .hidden {
     display: none;
+}
+
+#scoreDisplay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-size: 20px;
 }
