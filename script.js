@@ -6,6 +6,9 @@ canvas.height = 480;
 let kasper = new Image();
 kasper.src = 'assets/kasperghostflappy.png';
 
+let background = new Image();
+background.src = 'assets/background.png';
+
 let flapSound = new Audio('assets/flap.wav');
 let gameOverSound = new Audio('assets/gameover.wav');
 let bgMusic = new Audio('assets/background.mp3');
@@ -25,6 +28,10 @@ let pipeSpeed = 2;
 
 let score = 0;
 let gameOver = false;
+
+function drawBackground() {
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+}
 
 function drawKasper() {
     ctx.drawImage(kasper, kasperX, kasperY);
@@ -122,6 +129,7 @@ function flap() {
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    drawBackground();
     drawKasper();
     updateKasper();
 
