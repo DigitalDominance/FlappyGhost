@@ -16,14 +16,14 @@ bgMusic.loop = true;
 
 let kasperX = 50;
 let kasperY = 150;
-let gravity = 0.25; // Adjusted gravity for a smoother fall
-let lift = -6;      // Adjusted lift for a more responsive jump
+let gravity = 0.2; // Subtle gravity for smoother fall
+let lift = -5;     // Subtle lift for smoother jumps
 let velocity = 0;
 
 let pipes = [];
 let pipeWidth = 50;
 let pipeGap = 150;  // Start with a larger gap between pipes
-let pipeSpeed = 1.5;  // Start with a slower speed
+let pipeSpeed = 1.0;  // Start with a slower speed
 
 let score = 0;
 let gameOver = false;
@@ -62,8 +62,8 @@ function updatePipes() {
             score++;
             document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
             // Gradually increase the speed and decrease the gap
-            pipeSpeed += 0.05;
-            if (pipeGap > 100) pipeGap -= 1;
+            pipeSpeed += 0.02;
+            if (pipeGap > 100) pipeGap -= 0.5;
         }
 
         // Check for collisions
@@ -103,7 +103,7 @@ function restartGame() {
     pipes = [];
     score = 0;
     gameOver = false;
-    pipeSpeed = 1.5; // Reset the speed
+    pipeSpeed = 1.0; // Reset the speed
     pipeGap = 150;   // Reset the gap
     bgMusic.play();
     document.getElementById('gameOver').classList.add('hidden');
