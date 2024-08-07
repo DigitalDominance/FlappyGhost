@@ -35,7 +35,6 @@ function resizeCanvas() {
         drawBackground();
         drawKasper();
         drawPipes();
-        drawScore();
     }
 }
 window.addEventListener('resize', resizeCanvas);
@@ -128,12 +127,6 @@ function restartGame() {
     gameLoop();
 }
 
-function drawScore() {
-    ctx.fillStyle = '#fff';
-    ctx.font = '20px "Press Start 2P", cursive';
-    ctx.fillText(`Score: ${score}`, 10, 25);
-}
-
 document.addEventListener('keydown', function(event) {
     if (event.code === 'Space' || event.code === 'ArrowUp') {
         flap();
@@ -156,7 +149,6 @@ function gameLoop() {
     updateKasper();
     updatePipes();
     drawPipes();
-    drawScore();
 
     if (!gameOver) {
         requestAnimationFrame(gameLoop);
@@ -165,33 +157,4 @@ function gameLoop() {
 
 function startGame() {
     document.getElementById('playScreen').style.display = 'none';
-    bgMusic.play();
-    document.getElementById('scoreDisplay').classList.remove('hidden');
-    gameRunning = true;
-    gameLoop();
-}
-
-Promise.all([
-    new Promise((resolve, reject) => {
-        background.onload = resolve;
-        background.onerror = reject;
-    }),
-    new Promise((resolve, reject) => {
-        kasper.onload = resolve;
-        kasper.onerror = reject;
-    }),
-    new Promise((resolve, reject) => {
-        flapSound.oncanplaythrough = resolve;
-        flapSound.onerror = reject;
-    }),
-    new Promise((resolve, reject) => {
-        gameOverSound.oncanplaythrough = resolve;
-        gameOverSound.onerror = reject;
-    }),
-    new Promise((resolve, reject) => {
-        bgMusic.oncanplaythrough = resolve;
-        bgMusic.onerror = reject;
-    })
-]).then(() => {
-    document.getElementById('playScreen').style.display = 'block';
-}).catch(err => console.error('Failed to load assets:', err));
+   
