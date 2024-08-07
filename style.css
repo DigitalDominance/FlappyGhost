@@ -18,9 +18,12 @@ body {
 }
 
 #gameCanvas {
+    background: #70c5ce;
     display: block;
     border: 2px solid #fff;
     border-radius: 10px;
+    width: 600px;
+    height: 900px;
 }
 
 #gameOver {
@@ -57,6 +60,28 @@ body {
 
 .hidden {
     display: none;
+}
+
+#playButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+#playButton button {
+    padding: 10px 20px;
+    font-size: 20px;
+    color: white;
+    background-color: #32cd32;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#playButton button:hover {
+    background-color: #228b22;
 }
 
 #scoreDisplay {

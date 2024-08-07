@@ -1,7 +1,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-canvas.width = 320;
-canvas.height = 480;
+canvas.width = 600;
+canvas.height = 900;
 
 let background = new Image();
 background.src = 'assets/background.png';
@@ -146,6 +146,12 @@ function gameLoop() {
     }
 }
 
+function startGame() {
+    document.getElementById('playButton').classList.add('hidden');
+    bgMusic.play();
+    gameLoop();
+}
+
 Promise.all([
     new Promise((resolve, reject) => {
         background.onload = resolve;
@@ -168,6 +174,5 @@ Promise.all([
         bgMusic.onerror = reject;
     })
 ]).then(() => {
-    bgMusic.play();
-    gameLoop();
+    document.getElementById('playButton').classList.remove('hidden');
 }).catch(err => console.error('Failed to load assets:', err));
