@@ -109,6 +109,7 @@ function endGame() {
     gameOverSound.play();
     bgMusic.pause();
     document.getElementById('gameOver').style.display = 'block';
+    document.getElementById('scoreDisplay').classList.add('hidden');
     gameRunning = false;
 }
 
@@ -123,6 +124,7 @@ function restartGame() {
     bgMusic.play();
     document.getElementById('gameOver').style.display = 'none';
     document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
+    document.getElementById('scoreDisplay').classList.remove('hidden');
     gameRunning = true;
     gameLoop();
 }
@@ -165,6 +167,7 @@ function gameLoop() {
 function startGame() {
     document.getElementById('playScreen').style.display = 'none';
     bgMusic.play();
+    document.getElementById('scoreDisplay').classList.remove('hidden');
     gameRunning = true;
     gameLoop();
 }
