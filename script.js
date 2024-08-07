@@ -1,7 +1,9 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// Initialize gameRunning before using it
 let gameRunning = false;
+
 let background = new Image();
 background.src = 'https://digitaldominance.github.io/FlappyGhost/assets/background.png';
 
