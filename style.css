@@ -62,26 +62,39 @@ body {
     display: none;
 }
 
-#playButton {
+#playScreen {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    animation: fadeIn 1s;
 }
 
 #playButton button {
-    padding: 10px 20px;
-    font-size: 20px;
+    padding: 20px 40px;
+    font-size: 24px;
     color: white;
     background-color: #32cd32;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 #playButton button:hover {
     background-color: #228b22;
+    transform: scale(1.1);
+}
+
+#comingSoon {
+    margin-top: 20px;
+    font-size: 18px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px 30px;
+    border-radius: 10px;
+    animation: fadeIn 2s;
 }
 
 #scoreDisplay {
@@ -90,4 +103,9 @@ body {
     left: 10px;
     color: white;
     font-size: 20px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }

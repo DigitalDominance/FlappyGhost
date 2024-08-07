@@ -147,7 +147,7 @@ function gameLoop() {
 }
 
 function startGame() {
-    document.getElementById('playButton').classList.add('hidden');
+    document.getElementById('playScreen').classList.add('hidden');
     bgMusic.play();
     gameLoop();
 }
@@ -174,5 +174,5 @@ Promise.all([
         bgMusic.onerror = reject;
     })
 ]).then(() => {
-    document.getElementById('playButton').classList.remove('hidden');
+    document.getElementById('playScreen').classList.remove('hidden');
 }).catch(err => console.error('Failed to load assets:', err));
