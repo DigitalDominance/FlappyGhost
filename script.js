@@ -1,17 +1,28 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-canvas.width = 600;
-canvas.height = 900;
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    if (gameRunning) {
+        drawBackground();
+        drawKasper();
+        drawPipes();
+        drawScore();
+    }
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
 let background = new Image();
-background.src = 'assets/background.png';
+background.src = 'https://digitaldominance.github.io/FlappyGhost/assets/background.png';
 
 let kasper = new Image();
-kasper.src = 'assets/kasperghostflappy.png';
+kasper.src = 'https://digitaldominance.github.io/FlappyGhost/assets/kasperghostflappy.png';
 
-let flapSound = new Audio('assets/flap.wav');
-let gameOverSound = new Audio('assets/gameover.wav');
-let bgMusic = new Audio('assets/background.mp3');
+let flapSound = new Audio('https://digitaldominance.github.io/FlappyGhost/assets/flap.wav');
+let gameOverSound = new Audio('https://digitaldominance.github.io/FlappyGhost/assets/gameover.wav');
+let bgMusic = new Audio('https://digitaldominance.github.io/FlappyGhost/assets/background.mp3');
 bgMusic.loop = true;
 
 let kasperX = 50;
@@ -27,6 +38,7 @@ let pipeSpeed = 1.0;  // Start with a slower speed
 
 let score = 0;
 let gameOver = false;
+let gameRunning = false;
 
 function drawBackground() {
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
@@ -94,7 +106,8 @@ function endGame() {
     gameOver = true;
     gameOverSound.play();
     bgMusic.pause();
-    document.getElementById('gameOver').classList.remove('hidden');
+    document.getElementById('gameOver').style.display = 'block';
+    gameRunning = false;
 }
 
 function restartGame() {
@@ -106,8 +119,9 @@ function restartGame() {
     pipeSpeed = 1.0; // Reset the speed
     pipeGap = 150;   // Reset the gap
     bgMusic.play();
-    document.getElementById('gameOver').classList.add('hidden');
+    document.getElementById('gameOver').style.display = 'none';
     document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
+    gameRunning = true;
     gameLoop();
 }
 
@@ -147,8 +161,9 @@ function gameLoop() {
 }
 
 function startGame() {
-    document.getElementById('playScreen').classList.add('hidden');
+    document.getElementById('playScreen').style.display = 'none';
     bgMusic.play();
+    gameRunning = true;
     gameLoop();
 }
 
@@ -174,5 +189,5 @@ Promise.all([
         bgMusic.onerror = reject;
     })
 ]).then(() => {
-    document.getElementById('playScreen').classList.remove('hidden');
+    document.getElementById('playScreen').style.display = 'block';
 }).catch(err => console.error('Failed to load assets:', err));
