@@ -1,19 +1,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    if (gameRunning) {
-        drawBackground();
-        drawKasper();
-        drawPipes();
-        drawScore();
-    }
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
+let gameRunning = false;
 let background = new Image();
 background.src = 'https://digitaldominance.github.io/FlappyGhost/assets/background.png';
 
@@ -38,7 +26,19 @@ let pipeSpeed = 1.0;  // Start with a slower speed
 
 let score = 0;
 let gameOver = false;
-let gameRunning = false;
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    if (gameRunning) {
+        drawBackground();
+        drawKasper();
+        drawPipes();
+        drawScore();
+    }
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
 function drawBackground() {
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
