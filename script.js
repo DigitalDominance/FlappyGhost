@@ -16,13 +16,13 @@ bgMusic.loop = true;
 
 let kasperX = 50;
 let kasperY = 150;
-let gravity = 0.3;
-let lift = -6;
+let gravity = 0.25; // Adjusted gravity for a smoother fall
+let lift = -6;      // Adjusted lift for a more responsive jump
 let velocity = 0;
 
 let pipes = [];
 let pipeWidth = 50;
-let pipeGap = 120;
+let pipeGap = 100;  // Adjusted pipe gap for better gameplay
 let pipeSpeed = 2;
 
 let score = 0;
@@ -40,6 +40,7 @@ function updateKasper() {
     velocity += gravity;
     kasperY += velocity;
 
+    // Ensure Kasper doesn't go out of bounds
     if (kasperY + kasper.height >= canvas.height || kasperY <= 0) {
         endGame();
     }
@@ -62,6 +63,7 @@ function updatePipes() {
             document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
         }
 
+        // Check for collisions
         if (
             kasperX + kasper.width > pipe.x &&
             kasperX < pipe.x + pipeWidth &&
@@ -71,6 +73,7 @@ function updatePipes() {
         }
     });
 
+    // Generate new pipes
     if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
         let topHeight = Math.random() * (canvas.height - pipeGap - 50);
         let bottomHeight = canvas.height - topHeight - pipeGap;
