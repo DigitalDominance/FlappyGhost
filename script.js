@@ -1,7 +1,6 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Initialize gameRunning before using it
 let gameRunning = false;
 
 let background = new Image();
@@ -17,14 +16,14 @@ bgMusic.loop = true;
 
 let kasperX = 50;
 let kasperY = 150;
-let gravity = 0.2; // Subtle gravity for smoother fall
-let lift = -5;     // Subtle lift for smoother jumps
+let gravity = 0.2;
+let lift = -5;
 let velocity = 0;
 
 let pipes = [];
 let pipeWidth = 50;
-let pipeGap = 150;  // Start with a larger gap between pipes
-let pipeSpeed = 1.0;  // Start with a slower speed
+let pipeGap = 150;
+let pipeSpeed = 1.0;
 
 let score = 0;
 let gameOver = false;
@@ -54,7 +53,6 @@ function updateKasper() {
     velocity += gravity;
     kasperY += velocity;
 
-    // Ensure Kasper doesn't go out of bounds
     if (kasperY + kasper.height >= canvas.height || kasperY <= 0) {
         endGame();
     }
@@ -75,12 +73,10 @@ function updatePipes() {
             pipes.shift();
             score++;
             document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
-            // Gradually increase the speed and decrease the gap
             pipeSpeed += 0.02;
             if (pipeGap > 100) pipeGap -= 0.5;
         }
 
-        // Check for collisions
         if (
             kasperX + kasper.width > pipe.x &&
             kasperX < pipe.x + pipeWidth &&
@@ -90,7 +86,6 @@ function updatePipes() {
         }
     });
 
-    // Generate new pipes
     if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
         let topHeight = Math.random() * (canvas.height - pipeGap - 50);
         let bottomHeight = canvas.height - topHeight - pipeGap;
@@ -119,8 +114,8 @@ function restartGame() {
     pipes = [];
     score = 0;
     gameOver = false;
-    pipeSpeed = 1.0; // Reset the speed
-    pipeGap = 150;   // Reset the gap
+    pipeSpeed = 1.0;
+    pipeGap = 150;
     bgMusic.play();
     document.getElementById('gameOver').style.display = 'none';
     document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
@@ -130,10 +125,9 @@ function restartGame() {
 }
 
 function drawScore() {
-    // This function is now unnecessary and should be removed to prevent the duplicate counter issue
-    // ctx.fillStyle = '#fff';
-    // ctx.font = '20px "Press Start 2P", cursive';
-    // ctx.fillText(`Score: ${score}`, 10, 25);
+    ctx.fillStyle = '#fff';
+    ctx.font = '20px "Press Start 2P", cursive';
+    ctx.fillText(`Score: ${score}`, 10, 25);
 }
 
 document.addEventListener('keydown', function(event) {
@@ -154,4 +148,25 @@ function flap() {
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
-    drawKasper
+    drawKasper();
+    updateKasper();
+    updatePipes();
+    drawPipes();
+
+    if (!gameOver) {
+        requestAnimationFrame(gameLoop);
+    }
+}
+
+function startGame() {
+    document.getElementById('playScreen').style.display = 'none';
+    bgMusic.play();
+    document.getElementById('scoreDisplay').classList.remove('hidden');
+    gameRunning = true;
+    gameLoop();
+}
+
+Promise.all([
+    new Promise((resolve, reject) => {
+        background.onload = resolve;
+        background
