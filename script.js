@@ -16,8 +16,8 @@ bgMusic.loop = true;
 
 let kasperX = 50;
 let kasperY = 150;
-let gravity = 0.05;  // Weaker gravity for smoother fall
-let lift = -4;      // Weaker lift for smoother jumps
+let gravity = 0.25;  // Weaker gravity for smoother fall
+let lift = -6;      // Weaker lift for smoother jumps
 let velocity = 0;
 
 let pipes = [];
