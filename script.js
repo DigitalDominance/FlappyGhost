@@ -16,21 +16,21 @@ bgMusic.loop = true;
 
 let kasperX = 50;
 let kasperY = 150;
-let gravity = 0.2;
-let lift = -5;
+let gravity = 0.1;  // Weaker gravity for smoother fall
+let lift = -4;      // Weaker lift for smoother jumps
 let velocity = 0;
 
 let pipes = [];
 let pipeWidth = 50;
-let pipeGap = 150;
+let pipeGap = 200;  // Larger gap between pipes
 let pipeSpeed = 1.0;
 
 let score = 0;
 let gameOver = false;
 
 function resizeCanvas() {
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     if (gameRunning) {
         drawBackground();
         drawKasper();
@@ -60,7 +60,11 @@ function updateKasper() {
 
 function drawPipes() {
     pipes.forEach(pipe => {
-        ctx.fillStyle = '#000';
+        let gradient = ctx.createLinearGradient(pipe.x, pipe.topY, pipe.x + pipeWidth, pipe.topY + pipe.topHeight);
+        gradient.addColorStop(0, 'white');
+        gradient.addColorStop(1, 'lightblue');
+
+        ctx.fillStyle = gradient;
         ctx.fillRect(pipe.x, pipe.topY, pipeWidth, pipe.topHeight);
         ctx.fillRect(pipe.x, pipe.bottomY, pipeWidth, pipe.bottomHeight);
     });
@@ -74,7 +78,7 @@ function updatePipes() {
             score++;
             document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
             pipeSpeed += 0.02;
-            if (pipeGap > 100) pipeGap -= 0.5;
+            if (pipeGap > 150) pipeGap -= 1;
         }
 
         if (
@@ -115,7 +119,7 @@ function restartGame() {
     score = 0;
     gameOver = false;
     pipeSpeed = 1.0;
-    pipeGap = 150;
+    pipeGap = 200;
     bgMusic.play();
     document.getElementById('gameOver').style.display = 'none';
     document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
