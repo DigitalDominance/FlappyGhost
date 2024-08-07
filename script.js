@@ -22,8 +22,8 @@ let velocity = 0;
 
 let pipes = [];
 let pipeWidth = 50;
-let pipeGap = 100;  // Adjusted pipe gap for better gameplay
-let pipeSpeed = 2;
+let pipeGap = 150;  // Start with a larger gap between pipes
+let pipeSpeed = 1.5;  // Start with a slower speed
 
 let score = 0;
 let gameOver = false;
@@ -61,6 +61,9 @@ function updatePipes() {
             pipes.shift();
             score++;
             document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
+            // Gradually increase the speed and decrease the gap
+            pipeSpeed += 0.05;
+            if (pipeGap > 100) pipeGap -= 1;
         }
 
         // Check for collisions
@@ -100,6 +103,8 @@ function restartGame() {
     pipes = [];
     score = 0;
     gameOver = false;
+    pipeSpeed = 1.5; // Reset the speed
+    pipeGap = 150;   // Reset the gap
     bgMusic.play();
     document.getElementById('gameOver').classList.add('hidden');
     document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
