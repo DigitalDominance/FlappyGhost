@@ -16,14 +16,14 @@ bgMusic.loop = true;
 
 let kasperX = 50;
 let kasperY = 150;
-let gravity = 0.25;  // Weaker gravity for smoother fall
-let lift = -6;      // Weaker lift for smoother jumps
+let gravity = 0.1;  // Weaker gravity for smoother fall
+let lift = -5;      // Weaker lift for smoother jumps
 let velocity = 0;
 
 let pipes = [];
 let pipeWidth = 50;
 let pipeGap = 200;  // Larger gap between pipes
-let pipeSpeed = 1.0;
+let pipeSpeed = 1.0;  // Slower initial speed
 
 let score = 0;
 let gameOver = false;
@@ -77,8 +77,8 @@ function updatePipes() {
             pipes.shift();
             score++;
             document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
-            pipeSpeed += 0.02;
-            if (pipeGap > 150) pipeGap -= 1;
+            pipeSpeed += 0.01;  // Gradually increase the speed
+            if (pipeGap > 150) pipeGap -= 0.5;  // Gradually decrease the gap
         }
 
         if (
@@ -118,8 +118,8 @@ function restartGame() {
     pipes = [];
     score = 0;
     gameOver = false;
-    pipeSpeed = 1.0;
-    pipeGap = 200;
+    pipeSpeed = 1.0;  // Reset the speed
+    pipeGap = 200;   // Reset the gap
     bgMusic.play();
     document.getElementById('gameOver').style.display = 'none';
     document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
