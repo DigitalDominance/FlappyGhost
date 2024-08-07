@@ -29,8 +29,8 @@ let score = 0;
 let gameOver = false;
 
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
     if (gameRunning) {
         drawBackground();
         drawKasper();
@@ -152,6 +152,7 @@ function gameLoop() {
     updateKasper();
     updatePipes();
     drawPipes();
+    drawScore();
 
     if (!gameOver) {
         requestAnimationFrame(gameLoop);
@@ -162,31 +163,4 @@ function startGame() {
     document.getElementById('playScreen').style.display = 'none';
     bgMusic.play();
     document.getElementById('scoreDisplay').classList.remove('hidden');
-    gameRunning = true;
-    gameLoop();
-}
-
-Promise.all([
-    new Promise((resolve, reject) => {
-        background.onload = resolve;
-        background.onerror = reject;
-    }),
-    new Promise((resolve, reject) => {
-        kasper.onload = resolve;
-        kasper.onerror = reject;
-    }),
-    new Promise((resolve, reject) => {
-        flapSound.oncanplaythrough = resolve;
-        flapSound.onerror = reject;
-    }),
-    new Promise((resolve, reject) => {
-        gameOverSound.oncanplaythrough = resolve;
-        gameOverSound.onerror = reject;
-    }),
-    new Promise((resolve, reject) => {
-        bgMusic.oncanplaythrough = resolve;
-        bgMusic.onerror = reject;
-    })
-]).then(() => {
-    document.getElementById('playScreen').style.display = 'block';
-}).catch(err => console.error('Failed to load assets:', err));
+    gameRunning = true
