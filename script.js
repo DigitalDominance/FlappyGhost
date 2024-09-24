@@ -2,6 +2,14 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// Dynamically adjust canvas size based on screen size
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
 let gameRunning = false;
 
 let background = new Image();
@@ -15,15 +23,15 @@ let gameOverSound = new Audio('https://digitaldominance.github.io/FlappyGhost/as
 let bgMusic = new Audio('https://digitaldominance.github.io/FlappyGhost/assets/background.mp3');
 bgMusic.loop = true;
 
-let kasperX = 50;
-let kasperY = 150;
+let kasperX = canvas.width / 10;
+let kasperY = canvas.height / 2;
 let gravity = 0.08;  // Slightly weaker gravity for smoother fall
 let lift = -4;       // Weaker lift for smoother jumps
 let velocity = 0;
 
 let pipes = [];
-let pipeWidth = 50;
-let pipeGap = 200;  // Larger gap between pipes
+let pipeWidth = canvas.width / 10;
+let pipeGap = canvas.height / 3;  // Make pipe gap relative to screen size
 let pipeSpeed = 1.0;  // Slower initial speed
 
 let score = 0;
@@ -51,7 +59,7 @@ canvas.addEventListener('click', function() {
 });
 
 function startGame() {
-  kasperY = 150;
+  kasperY = canvas.height / 2;
   pipes = [];
   score = 0;
   gameRunning = true;
@@ -61,16 +69,16 @@ function startGame() {
 
 function gameLoop() {
   if (!gameRunning) return;
-  
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+
   // Draw background
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
   // Update and draw Kasper
   velocity += gravity;
   kasperY += velocity;
-  ctx.drawImage(kasper, kasperX, kasperY);
+  ctx.drawImage(kasper, kasperX, kasperY, canvas.width / 10, canvas.height / 10);  // Resize Kasper based on screen
 
   // Game logic for pipes, score, etc. continues here...
   // The rest of the game loop remains as is...
