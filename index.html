@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +13,10 @@
         <canvas id="gameCanvas"></canvas>
         <div id="gameOver" class="hidden">
             <h1>Game Over</h1>
+            <form id="submitScoreForm">
+                <input type="text" id="walletAddress" placeholder="Enter your Kaspa Wallet Address" required>
+                <button type="submit">Submit Score</button>
+            </form>
             <button onclick="restartGame()">Restart</button>
         </div>
         <div id="playScreen">
@@ -19,6 +24,10 @@
             <button onclick="startGame()">Play</button>
         </div>
         <div id="scoreDisplay" class="hidden">Score: 0</div>
+        <div id="leaderboard" class="hidden">
+            <h2>Leaderboard</h2>
+            <ul id="leaderboardList"></ul>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
