@@ -2,18 +2,10 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Set up a function to adjust the canvas size dynamically
+// Fullscreen canvas and proportional resizing
 function resizeCanvas() {
-  const aspectRatio = 16 / 9;
-  let width = window.innerWidth;
-  let height = window.innerHeight;
-
-  if (width / height > aspectRatio) {
-    width = height * aspectRatio;
-  } else {
-    height = width / aspectRatio;
-  }
-
+  const width = window.innerWidth;
+  const height = window.innerHeight;
   canvas.width = width;
   canvas.height = height;
 }
@@ -26,8 +18,9 @@ let walletAddress = '';
 let score = 0;
 
 // Load assets
-const background = new Image();
-background.src = 'assets/background.png';
+const backgroundGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+backgroundGradient.addColorStop(0, "#87CEFA");
+backgroundGradient.addColorStop(1, "#FFFFFF");
 
 const kasper = new Image();
 kasper.src = 'assets/kasperghostflappy.png';
@@ -46,7 +39,7 @@ let velocity = 0;
 let pipes = [];
 let pipeWidth = canvas.width / 10;
 let pipeGap = canvas.height / 3; 
-let pipeSpeed = 1.0;
+let pipeSpeed = 2;
 
 let gameOver = false;
 
@@ -63,6 +56,7 @@ document.getElementById('walletForm').addEventListener('submit', function(event)
 // Show game instructions and the "Start Game" button
 document.getElementById('startGameButton').addEventListener('click', function() {
   document.getElementById('playScreen').classList.add('hidden');
+  document.getElementById('scoreDisplay').classList.remove('hidden');  // Show score
   startGame();
 });
 
@@ -82,6 +76,30 @@ canvas.addEventListener('click', function() {
   }
 });
 
+// Draw pipes
+function drawPipes() {
+  for (let i = 0; i < pipes.length; i++) {
+    let pipe = pipes[i];
+    pipe.x -= pipeSpeed;
+
+    ctx.fillStyle = "#228B22"; // Pipe color
+    ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
+    ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+
+    if (pipe.x + pipeWidth < 0) {
+      pipes.splice(i, 1);
+      score += 1;  // Increment score when pipe passes
+    }
+  }
+}
+
+// Generate pipes
+function generatePipes() {
+  let top = Math.random() * (canvas.height / 2);
+  let bottom = canvas.height - (top + pipeGap);
+  pipes.push({x: canvas.width, top: top, bottom: bottom});
+}
+
 function startGame() {
   kasperY = canvas.height / 2;
   pipes = [];
@@ -89,6 +107,8 @@ function startGame() {
   gameRunning = true;
   bgMusic.play();
   gameLoop();
+  generatePipes();
+  setInterval(generatePipes, 2500);  // Generate pipes every 2.5 seconds
 }
 
 function gameLoop() {
@@ -96,13 +116,20 @@ function gameLoop() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  // Draw the background
-  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+  // Draw background
+  ctx.fillStyle = backgroundGradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Update Kasper's position and draw him
+  // Update and draw Kasper
   velocity += gravity;
   kasperY += velocity;
-  ctx.drawImage(kasper, kasperX, kasperY, canvas.width / 10, canvas.height / 10);  // Proportional Kasper size
+  ctx.drawImage(kasper, kasperX, kasperY, canvas.width / 10, canvas.height / 10);
+
+  // Draw pipes
+  drawPipes();
+
+  // Update score display
+  document.getElementById('scoreDisplay').textContent = `Score: ${score}`;
 
   requestAnimationFrame(gameLoop);
 }
@@ -119,7 +146,7 @@ function restartGame() {
 function submitScore() {
   if (!walletAddress) return;
 
-  fetch('http://your-server.com/submit_score', {
+  fetch('https://kasper-flappy.herokuapp.com/submit_score', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -144,7 +171,7 @@ function submitScore() {
 
 // Fetch leaderboard
 function fetchLeaderboard() {
-  fetch('http://your-server.com/get_leaderboard')
+  fetch('https://kasper-flappy.herokuapp.com/get_leaderboard')
     .then(response => response.json())
     .then(leaderboard => {
       const leaderboardList = document.getElementById('leaderboardList');
