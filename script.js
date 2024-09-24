@@ -22,6 +22,8 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 let gameRunning = false;
+let walletAddress = '';
+let score = 0;
 
 // Load assets
 const background = new Image();
@@ -35,7 +37,6 @@ const gameOverSound = new Audio('assets/gameover.wav');
 const bgMusic = new Audio('assets/background.mp3');
 bgMusic.loop = true;
 
-// Game variables
 let kasperX = canvas.width / 10;
 let kasperY = canvas.height / 2;
 let gravity = 0.08; 
@@ -47,14 +48,27 @@ let pipeWidth = canvas.width / 10;
 let pipeGap = canvas.height / 3; 
 let pipeSpeed = 1.0;
 
-let score = 0;
 let gameOver = false;
+
+// Ask the user for their wallet address and then show a "Start Game" button
+document.getElementById('walletForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  walletAddress = document.getElementById('walletAddress').value;
+  if (walletAddress) {
+    document.getElementById('playScreen').classList.remove('hidden');
+    document.getElementById('walletForm').classList.add('hidden');
+  }
+});
+
+// Show game instructions and the "Start Game" button
+document.getElementById('startGameButton').addEventListener('click', function() {
+  document.getElementById('playScreen').classList.add('hidden');
+  startGame();
+});
 
 // Mobile and Desktop support
 canvas.addEventListener('touchstart', function(e) {
-  if (!gameRunning) {
-    startGame();
-  } else {
+  if (gameRunning) {
     velocity = lift;
     flapSound.play();
   }
@@ -62,9 +76,7 @@ canvas.addEventListener('touchstart', function(e) {
 });
 
 canvas.addEventListener('click', function() {
-  if (!gameRunning) {
-    startGame();
-  } else {
+  if (gameRunning) {
     velocity = lift;
     flapSound.play();
   }
@@ -100,19 +112,13 @@ function restartGame() {
   gameRunning = false;
   bgMusic.pause();
   bgMusic.currentTime = 0;
-  startGame();
+  document.getElementById('gameOver').classList.remove('hidden');
 }
 
-// Submitting score functionality remains unchanged
+// Submit the score and show the leaderboard after the game ends
+function submitScore() {
+  if (!walletAddress) return;
 
-// Function to submit score to the leaderboard
-document.getElementById('submitScoreForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-  let walletAddress = document.getElementById('walletAddress').value;
-  submitScore(walletAddress, score);
-});
-
-function submitScore(walletAddress, score) {
   fetch('http://your-server.com/submit_score', {
     method: 'POST',
     headers: {
@@ -126,7 +132,6 @@ function submitScore(walletAddress, score) {
   .then(response => response.json())
   .then(data => {
     if (data.status === 'success') {
-      alert('Score submitted successfully!');
       fetchLeaderboard();
     } else {
       alert('Error submitting score!');
