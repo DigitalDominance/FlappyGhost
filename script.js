@@ -2,42 +2,55 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Dynamically adjust canvas size based on screen size
+// Set up a function to adjust the canvas size dynamically
 function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const aspectRatio = 16 / 9;
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+
+  if (width / height > aspectRatio) {
+    width = height * aspectRatio;
+  } else {
+    height = width / aspectRatio;
+  }
+
+  canvas.width = width;
+  canvas.height = height;
 }
+
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 let gameRunning = false;
 
-let background = new Image();
-background.src = 'https://digitaldominance.github.io/FlappyGhost/assets/background.png';
+// Load assets
+const background = new Image();
+background.src = 'assets/background.png';
 
-let kasper = new Image();
-kasper.src = 'https://digitaldominance.github.io/FlappyGhost/assets/kasperghostflappy.png';
+const kasper = new Image();
+kasper.src = 'assets/kasperghostflappy.png';
 
-let flapSound = new Audio('https://digitaldominance.github.io/FlappyGhost/assets/flap.wav');
-let gameOverSound = new Audio('https://digitaldominance.github.io/FlappyGhost/assets/gameover.wav');
-let bgMusic = new Audio('https://digitaldominance.github.io/FlappyGhost/assets/background.mp3');
+const flapSound = new Audio('assets/flap.wav');
+const gameOverSound = new Audio('assets/gameover.wav');
+const bgMusic = new Audio('assets/background.mp3');
 bgMusic.loop = true;
 
+// Game variables
 let kasperX = canvas.width / 10;
 let kasperY = canvas.height / 2;
-let gravity = 0.08;  // Slightly weaker gravity for smoother fall
-let lift = -4;       // Weaker lift for smoother jumps
+let gravity = 0.08; 
+let lift = -4;     
 let velocity = 0;
 
 let pipes = [];
 let pipeWidth = canvas.width / 10;
-let pipeGap = canvas.height / 3;  // Make pipe gap relative to screen size
-let pipeSpeed = 1.0;  // Slower initial speed
+let pipeGap = canvas.height / 3; 
+let pipeSpeed = 1.0;
 
 let score = 0;
 let gameOver = false;
 
-// Mobile touch support
+// Mobile and Desktop support
 canvas.addEventListener('touchstart', function(e) {
   if (!gameRunning) {
     startGame();
@@ -48,7 +61,6 @@ canvas.addEventListener('touchstart', function(e) {
   e.preventDefault();
 });
 
-// Desktop click support
 canvas.addEventListener('click', function() {
   if (!gameRunning) {
     startGame();
@@ -71,17 +83,14 @@ function gameLoop() {
   if (!gameRunning) return;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Draw background
+  
+  // Draw the background
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-  // Update and draw Kasper
+  // Update Kasper's position and draw him
   velocity += gravity;
   kasperY += velocity;
-  ctx.drawImage(kasper, kasperX, kasperY, canvas.width / 10, canvas.height / 10);  // Resize Kasper based on screen
-
-  // Game logic for pipes, score, etc. continues here...
-  // The rest of the game loop remains as is...
+  ctx.drawImage(kasper, kasperX, kasperY, canvas.width / 10, canvas.height / 10);  // Proportional Kasper size
 
   requestAnimationFrame(gameLoop);
 }
@@ -94,6 +103,8 @@ function restartGame() {
   startGame();
 }
 
+// Submitting score functionality remains unchanged
+
 // Function to submit score to the leaderboard
 document.getElementById('submitScoreForm').addEventListener('submit', function(event) {
   event.preventDefault();
@@ -101,7 +112,6 @@ document.getElementById('submitScoreForm').addEventListener('submit', function(e
   submitScore(walletAddress, score);
 });
 
-// Submit score API call
 function submitScore(walletAddress, score) {
   fetch('http://your-server.com/submit_score', {
     method: 'POST',
@@ -127,7 +137,7 @@ function submitScore(walletAddress, score) {
   });
 }
 
-// Fetch leaderboard and update UI
+// Fetch leaderboard
 function fetchLeaderboard() {
   fetch('http://your-server.com/get_leaderboard')
     .then(response => response.json())
